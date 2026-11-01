@@ -2,12 +2,12 @@
   "expo": {
     "name": "DecoTrack",
     "slug": "decotrack",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "android": {
       "package": "no.decobygg.decotrack",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions": [
         "CAMERA"
       ],

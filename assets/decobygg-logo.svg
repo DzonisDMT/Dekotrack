@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 560">
+<rect width="600" height="560" fill="#fff"/>
+<g fill="#102b4b">
+<path d="M175 38h230l24 25v56h-47V84H222v150h-47V38zm-73 74h86v44h-42v145h226v46H132l-30-28V112z"/>
+<path d="M248 112h222l28 28v165l-29 28h-39v-45h22V157H248z"/>
+<path d="M210 240h205v-35h45v84l-27 28H210z"/>
+<path d="M178 320h250v45H222v42h-44z"/>
+</g>
+<path d="M58 420H542" stroke="#9a9a9a" stroke-width="9"/>
+<text x="58" y="510" font-family="Arial,Helvetica,sans-serif" font-size="91" font-weight="800" letter-spacing="3" fill="#102b4b">DEKO</text>
+<text x="58" y="550" font-family="Arial,Helvetica,sans-serif" font-size="31" font-weight="700" letter-spacing="17" fill="#999">BYGG AS</text>
+</svg>

@@ -78,7 +78,8 @@ function calendarPage(){const n=new Date(),y=n.getFullYear(),m=n.getMonth(),firs
 function showGlobalSearch(){modal("Paieška",'<label>Įrankis, ID, darbuotojas, krepšys, objektas<input id="globalQuery" placeholder="Ieškoti…" oninput="globalResults()"></label><div id="globalResults"></div>',"noop");el("globalQuery").focus();globalResults()}
 function noop(){}
 function globalResults(){const q=(el("globalQuery")?.value||"").toLowerCase(),a=[];for(const t of data.tools)if((t.name+" "+t.id+" "+t.holder+" "+t.location).toLowerCase().includes(q))a.push(["Įrankis",t.id+" · "+t.name,t.holder+" · "+t.location]);for(const b of data.bags)if((b.name+" "+b.id+" "+b.holder+" "+b.project).toLowerCase().includes(q))a.push(["Krepšys",b.id+" · "+b.name,b.holder]);for(const p of data.projects)if((p.name+" "+p.site+" "+p.lead).toLowerCase().includes(q))a.push(["Objektas",p.name,p.site]);for(const t of data.transfers)if((t.item+" "+t.from+" "+t.to+" "+t.by).toLowerCase().includes(q))a.push(["Perdavimas",t.item,t.from+" → "+t.to+" · "+fmtDate(t.date)]);const r=el("globalResults");if(r)r.innerHTML=a.length?a.map(x=>'<div class="searchhit"><b>'+x[0]+' · '+x[1]+'</b><small>'+x[2]+'</small></div>').join(""):'<div class="empty">Nėra rezultatų</div>'}
-\nfunction showBag(id){let b=data.bags.find(x=>x.id===id);alert(b.name+"\nAtsakingas: "+b.holder+"\nVieta: "+b.project+"\nContents: "+(b.items.length?b.items.join(", "):"Įrankiai dar nepriskirti"))}
+
+function showBag(id){let b=data.bags.find(x=>x.id===id);alert(b.name+"\nAtsakingas: "+b.holder+"\nVieta: "+b.project+"\nContents: "+(b.items.length?b.items.join(", "):"Įrankiai dar nepriskirti"))}
 function showProject(id){let p=data.projects.find(x=>x.id===id);alert(p.name+"\nLead: "+p.lead+"\nKomandos dydis: "+p.people+"\nĮranga: "+(p.items.length?p.items.join(", "):"Įranga dar nepriskirta"))}
 render();
 </script>

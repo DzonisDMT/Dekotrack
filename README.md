@@ -1,53 +1,71 @@
 # DecoTrack
 
-**DEKOBYGG AS equipment tracking app** · Version **0.1.0**
+**DEKOBYGG AS equipment tracking** · Android-first · Expo / React Native / TypeScript
 
-The Expo / React Native mobile app is the primary product. The static web demo in `index.html` is only a browser preview and is not the source of truth.
+DecoTrack tracks individual tools, numbered tool bags, employees, construction projects, custody handovers, maintenance and audit history. It is deliberately not a full ERP.
 
-## Mobile app (Android first)
+## Architecture
 
-### Requirements
-- Node.js LTS
-- npm
-- Expo Go on an Android phone for quick testing, or Android Studio for an emulator
+- Android + responsive web: one Expo / React Native application.
+- Cloud: Supabase Auth + PostgreSQL + Row Level Security.
+- Hosting: Vercel for web export; Expo EAS for Android builds.
+- Data access: typed repository functions in `src/lib/decotrack-api.ts`.
+- Atomic custody handover: PostgreSQL RPC `complete_tool_transfer`.
 
-### Run locally
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/API.md](docs/API.md) and [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md).
+
+## Repository layout
+
+```text
+App.tsx                         Expo client (current UI prototype)
+src/lib/supabase.ts             Supabase client configuration
+src/lib/decotrack-api.ts        Typed cloud data access functions
+supabase/migrations/            PostgreSQL schema, RLS and RPC migrations
+docs/ARCHITECTURE.md            System architecture and scale path
+docs/API.md                     API contract
+docs/RELEASE_CHECKLIST.md       Go-live controls
+index.html                      Legacy static browser preview
+```
+
+## Run the Android prototype
+
+Requirements: Node.js LTS and npm.
+
 ```bash
 npm install
 npx expo start
 ```
-Scan the QR code from the Expo CLI with Expo Go. For an Android emulator:
-```bash
-npm run android
+
+Scan the Expo QR code with Expo Go, or run `npm run android`.
+
+## Configure the cloud foundation
+
+1. Create a Supabase project for development/staging.
+2. In the Supabase SQL Editor, apply `supabase/migrations/0001_initial_schema.sql` (or use the Supabase CLI).
+3. Copy the project URL and anon/publishable key into a local `.env` file:
+
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
 ```
 
-### Current prototype features
-- Lithuanian and English interface switch
-- Light and dark appearance switch
-- Dashboard with equipment totals
-- Tool register, search and add-tool flow
-- Tool bags and project lists
-- Equipment transfer form and transfer history
-- QR code display for each tool and camera QR scanning
-- Local persistence on the device with AsyncStorage
+4. Create the first organization, invite/sign up the owner account, then add the owner to `public.memberships` using the Supabase dashboard or a trusted admin script. Do not expose a service-role key in the app.
+5. Test RLS with separate owner, foreman and employee accounts before entering real inventory.
 
-### Important prototype limitations
-Version 0.1.0 stores data locally on one device. It does **not** yet provide employee accounts, a shared cloud database, multi-device synchronization, server-side audit history, or production permissions. Do not use the demo data as real company inventory. These are planned for the next development stage.
+## Important implementation status
+
+The repository now contains the **cloud database foundation, tenant security policies, atomic transfer function, typed Supabase client/repository layer, and architecture/API/release documentation**.
+
+The existing Expo screens are still a local prototype and have not yet been migrated to use the cloud repository end-to-end. Authentication UI, organization onboarding, employee-specific permissions, offline sync, end-to-end tests and production monitoring remain required before real company rollout. Do not treat the current UI or demo records as production inventory.
+
+## Security principles
+
+- Every business record is scoped to an organization.
+- RLS is mandatory; client-side filtering is not security.
+- The service-role key must never be bundled into Expo or browser code.
+- Transfers must go through the database RPC so assignment and audit history commit together.
+- Employee visibility and mutation permissions must be tightened and tested before rollout.
 
 ## Versioning
-We use Semantic Versioning:
-- Patch (0.1.1): bug fixes
-- Minor (0.2.0): backward-compatible features
-- Major (1.0.0): first stable production release
 
-Update `package.json` and `app.json` together for every mobile release, and document changes in `CHANGELOG.md`.
-
-## Project structure
-- `App.tsx` — primary Expo mobile application
-- `app.json` — Expo / Android configuration
-- `package.json` — mobile dependencies and version
-- `index.html` — separate responsive web preview
-- `assets/` — brand and app assets
-
-## Branding
-The current mobile header uses a text wordmark placeholder. Replace it with the approved original DEKOBYGG AS logo asset before production.
+Semantic Versioning: patch for fixes, minor for backward-compatible features, major for stable production releases. Update `package.json` and `app.json` together for mobile releases and record changes in `CHANGELOG.md`.
